@@ -1,5 +1,5 @@
 import os
-from yosh.constants import *
+from redshell.constants import *
 
 
 def cd(args):

@@ -2,15 +2,15 @@
 
 from setuptools import setup
 
-setup(name='yosh',
+setup(name='redshell',
       version='1.0',
-      description='Your own shell',
-      author='Supasate Choochaisri',
-      author_email='supasate.c@gmail.com',
-      url='https://github.com/supasate/yosh',
-      packages=['yosh', 'yosh.builtins'],
+      description='A RedTeam shell',
+      author='Dominee Fromhell',
+      author_email='dominee@hell.sk',
+      url='https://github.com/dominee/redshell',
+      packages=['redshell', 'redshell.builtins'],
       entry_points="""
       [console_scripts]
-      yosh = yosh.shell:main
+      redshell = redshell.shell:main
       """,
       )

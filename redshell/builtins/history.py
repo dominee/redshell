@@ -1,6 +1,6 @@
 import os
 import sys
-from yosh.constants import *
+from redshell.constants import *
 
 
 def history(args):

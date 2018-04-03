@@ -6,8 +6,8 @@ import socket
 import signal
 import subprocess
 import platform
-from yosh.constants import *
-from yosh.builtins import *
+from redshell.constants import *
+from redshell.builtins import *
 
 # Hash map to store built-in function name and reference as key and value
 built_in_cmds = {}
