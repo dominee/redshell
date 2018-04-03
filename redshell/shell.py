@@ -33,13 +33,13 @@ def handler_kill(signum, frame):
 
 
 def execute(cmd_tokens):
-    with open(HISTORY_PATH, 'a') as history_file:
-        history_file.write(' '.join(cmd_tokens) + os.linesep)
-
     if cmd_tokens:
         # Extract command name and arguments from tokens
         cmd_name = cmd_tokens[0]
         cmd_args = cmd_tokens[1:]
+        # Log command to history
+        with open(HISTORY_PATH, 'a') as history_file:
+            history_file.write(' '.join(cmd_tokens) + os.linesep)
 
         # If the command is a built-in command,
         # invoke its function with arguments
