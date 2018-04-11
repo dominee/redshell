@@ -8,6 +8,7 @@ import subprocess
 import platform
 from redshell.constants import *
 from redshell.builtins import *
+from redshell.prompt import *
 
 # Hash map to store built-in function name and reference as key and value
 built_in_cmds = {}
@@ -63,26 +64,6 @@ def execute(cmd_tokens):
             os.system(command)
     # Return status indicating to wait for next command in shell_loop
     return SHELL_STATUS_RUN
-
-
-# Display a command prompt as `[<user>@<hostname> <dir>]$ `
-def display_cmd_prompt():
-    # Get user and hostname
-    user = getpass.getuser()
-    hostname = socket.gethostname()
-
-    # Get base directory (last part of the curent working directory path)
-    cwd = os.getcwd()
-    base_dir = os.path.basename(cwd)
-
-    # Use ~ instead if a user is at his/her home directory
-    home_dir = os.path.expanduser('~')
-    if cwd == home_dir:
-        base_dir = '~'
-
-    # Print out to console
-    sys.stdout.write("[%s@%s %s]$ " % (user, hostname, base_dir))
-    sys.stdout.flush()
 
 
 def ignore_signals():
