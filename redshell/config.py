@@ -9,6 +9,8 @@ REDSHELL_DIR = os.path.expanduser(DEFAULT_REDSHELL_DIR)
 REDSHELL_HISTORY = os.path.expanduser(DEFAULT_REDSHELL_HISTORY)
 REDSHELL_REPORTS = os.path.expanduser(DEFAULT_REDSHELL_REPORTS)
 
+REDSHELL_DIR_SUBDIRS = ['log','output','lists','tools']
+
 def ConfigSectionMap(section):
     dict1 = {}
     options = Config.options(section)
@@ -47,7 +49,12 @@ try:
     else:
         REDSHELL_DIR = redshell_dir_conf
 
-# TODO: create folder structure
+    # create subfolders in the homedir. if they exist just skip
+    try:    
+        for subdir in REDSHELL_DIR_SUBDIRS:
+            os.makedirs(REDSHELL_DIR+os.sep+subdir)
+    except:
+        pass
 
 # if no entry exists in config file or is not valid just ignore it    
 except: 
