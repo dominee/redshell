@@ -111,6 +111,7 @@ def init():
     register_command("export", export)
     register_command("getenv", getenv)
     register_command("history", history)
+    register_command("burp", burp)
 
 
 def main():
