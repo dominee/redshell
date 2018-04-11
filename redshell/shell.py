@@ -9,6 +9,7 @@ import platform
 from redshell.constants import *
 from redshell.builtins import *
 from redshell.prompt import *
+from redshell.config import *
 
 # Hash map to store built-in function name and reference as key and value
 built_in_cmds = {}
@@ -39,7 +40,7 @@ def execute(cmd_tokens):
         cmd_name = cmd_tokens[0]
         cmd_args = cmd_tokens[1:]
         # Log command to history
-        with open(HISTORY_PATH, 'a') as history_file:
+        with open(REDSHELL_HISTORY, 'a') as history_file:
             history_file.write(' '.join(cmd_tokens) + os.linesep)
 
         # If the command is a built-in command,
