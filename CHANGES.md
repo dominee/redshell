@@ -1,3 +1,8 @@
+2018-03-04, Version 0.3.0
+=========================
+* Renamed project to *redshell*
+
+
 2016-08-01, Version 0.2.0
 =========================
 * Add `export` built-in command (Yuliang Tan)
