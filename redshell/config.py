@@ -24,8 +24,11 @@ def ConfigSectionMap(section):
 
 try:
     Config = ConfigParser.ConfigParser()
-    if os.path.isfile("redshell.conf"):
+    if os.path.isfile(os.path.expanduser('~'+os.sep+'redshell.conf')):
         Config.read("redshell.conf")
+    else:
+        if os.path.isfile("redshell.conf"):    
+            Config.read("redshell.conf")
 except:
     pass
 
