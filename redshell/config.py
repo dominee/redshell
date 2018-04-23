@@ -88,6 +88,26 @@ try:
 except: 
     pass
 
+## CONFIG: Bin / nmap : binary for nmap
+# Check if a value is provided in config file
+try:
+    redshell_nmap_conf = os.path.expanduser(ConfigSectionMap("Bin")['nmap'])
+    if os.path.isfile(redshell_nmap_conf) and os.access(redshell_nmap_conf, os.X_OK):
+        REDSHELL_NMAP = redshell_nmap_conf
+# if no entry exists in config file or is not valid just ignore it    
+except: 
+    pass
+
+## CONFIG: Bin / sudo : binary for sudo
+# Check if a value is provided in config file
+try:
+    redshell_sudo_conf = os.path.expanduser(ConfigSectionMap("Bin")['sudo'])
+    if os.path.isfile(redshell_sudo_conf) and os.access(redshell_sudo_conf, os.X_OK):
+        REDSHELL_SUDO = redshell_sudo_conf
+# if no entry exists in config file or is not valid just ignore it    
+except: 
+    pass
+    
 #debug
 #print("REDSHELL_DIR: ", REDSHELL_DIR)
 #print("REDSHELL_HISTORY: ", REDSHELL_HISTORY)

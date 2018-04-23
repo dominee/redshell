@@ -112,6 +112,7 @@ def init():
     register_command("getenv", getenv)
     register_command("history", history)
     register_command("burp", burp)
+    register_command("nmap", nmap)
 
 
 def main():
