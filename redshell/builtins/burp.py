@@ -8,7 +8,29 @@ from datetime import datetime
 burp_dir = REDSHELL_DIR+os.sep+'tools'+os.sep+'burp'
 burp_log = REDSHELL_DIR+os.sep+'log'+os.sep+datetime.now().strftime(os.sep+"%Y"+os.sep+"%m"+os.sep+"%d")
 
+def burp_help():
+    sys.stdout.write("""
+[burp]
+Usage : burp
+
+Wrapper for burp to add auto-logging of console output. It starts the newst jar file from BURP_DIR.
+
+""")
+    return SHELL_STATUS_RUN
+
+def burp_usage():
+    sys.stdout.write("burp\n")
+    return SHELL_STATUS_RUN
+
 def burp(args):
+
+    # Do we need to display usage or help?
+    if args[0] == 'help':
+        return burp_help()
+
+    if args[0] == 'usage':
+        return burp_usage()
+
     # get current working directory
     start_dir = os.getcwd()
 
@@ -38,7 +60,7 @@ def burp(args):
     # open a new logfile with timestamp suffix and run burp
     logfile = open(burp_log+os.sep+"burp-console-"+datetime.now().strftime("%H%M%S")+".log", 'ab')
     try:
-        p = Popen(['java', '-jar', '-Xmx4g', '-XX:MaxPermSize=2G', fp], stdout=logfile, stderr=STDOUT, bufsize=1)
+        p = Popen(['java', '-jar', '-Xmx4g', '-XX:MaxPermSize=2G', fp], stdout=logfile, stderr=STDOUT, cwd=burp_dir, bufsize=1)
         sys.stdout.write("[+] Burpsuite starting [%s]\n" % p.pid)
     except:
         sys.stdout.write("[!] Error: "+sys.exc_info()[0])

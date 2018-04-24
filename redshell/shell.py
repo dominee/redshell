@@ -36,12 +36,22 @@ def handler_kill(signum, frame):
 
 def execute(cmd_tokens):
     if cmd_tokens:
+
         # Extract command name and arguments from tokens
         cmd_name = cmd_tokens[0]
         cmd_args = cmd_tokens[1:]
         # Log command to history
         with open(REDSHELL_HISTORY, 'a') as history_file:
             history_file.write(' '.join(cmd_tokens) + os.linesep)
+
+        # show list of available command and their short usage
+        if cmd_name == 'help' or cmd_name == 'usage':
+            for cmd_name in built_in_cmds:
+                try:
+                    built_in_cmds[cmd_name](['usage'])
+                except:
+                    pass
+            return SHELL_STATUS_RUN
 
         # If the command is a built-in command,
         # invoke its function with arguments
