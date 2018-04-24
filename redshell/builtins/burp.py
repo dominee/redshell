@@ -24,40 +24,40 @@ def burp_usage():
 
 def burp(args):
 
-    # Do we need to display usage or help?
-    if args[0] == 'help':
-        return burp_help()
+    if len(args) > 0:
+        # Do we need to display usage or help?
+        if args[0] == 'help':
+            return burp_help()
+        if args[0] == 'usage':
+            return burp_usage()
 
-    if args[0] == 'usage':
-        return burp_usage()
-
-    # get current working directory
+    # Get current working directory
     start_dir = os.getcwd()
 
-    # cd into burp home so burp updates are downloaded there
+    # Cd into burp home so burp updates are downloaded there
     if not os.path.isdir(burp_dir):
         os.mkdir(burp_dir)
     else:    
         os.chdir(burp_dir)
 
-    # create log dir for today
+    # Create log dir for today
     if not os.path.isdir(burp_log):
         os.makedirs(burp_log)
 
-    # filter out burp stable versions
+    # Filter out burp stable versions
     burp_jars = glob.glob('burpsuite_pro_v*.jar')
-    # get stats for the files
+    # Get stats for the files
     entries = (os.path.join(burp_dir, fn) for fn in burp_jars)
     entries = ((os.stat(path), path) for path in entries)
-    # leave only regular files, insert creation date
+    # Leave only regular files, insert creation date
     entries = ((stat[ST_CTIME], path)
                for stat, path in entries if S_ISREG(stat[ST_MODE]))
-    # get the newest one
+    # Get the newest one
     ct,fp = sorted(entries,reverse=True)[0]
 
     print '[ ] Using latest Burpsuite',fp,'(',time.ctime(ct),')'
 
-    # open a new logfile with timestamp suffix and run burp
+    # Open a new logfile with timestamp suffix and run burp
     logfile = open(burp_log+os.sep+"burp-console-"+datetime.now().strftime("%H%M%S")+".log", 'ab')
     try:
         p = Popen(['java', '-jar', '-Xmx4g', '-XX:MaxPermSize=2G', fp], stdout=logfile, stderr=STDOUT, cwd=burp_dir, bufsize=1)
@@ -65,7 +65,7 @@ def burp(args):
     except:
         sys.stdout.write("[!] Error: "+sys.exc_info()[0])
 
-    # return to the directory we started from
+    # Return to the directory we started from
     os.chdir(start_dir)
 
     return SHELL_STATUS_RUN

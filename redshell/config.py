@@ -4,7 +4,7 @@ import os
 import sys
 from redshell.constants import *
 
-# set default values
+# Set default values
 REDSHELL_DIR = os.path.expanduser(DEFAULT_REDSHELL_DIR)
 REDSHELL_HISTORY = os.path.expanduser(DEFAULT_REDSHELL_HISTORY)
 REDSHELL_REPORTS = os.path.expanduser(DEFAULT_REDSHELL_REPORTS)
@@ -49,14 +49,14 @@ try:
     else:
         REDSHELL_DIR = redshell_dir_conf
 
-    # create subfolders in the homedir. if they exist just skip
+    # Create subfolders in the homedir. if they exist just skip
     try:    
         for subdir in REDSHELL_DIR_SUBDIRS:
             os.makedirs(REDSHELL_DIR+os.sep+subdir)
     except:
         pass
 
-# if no entry exists in config file or is not valid just ignore it    
+# If no entry exists in config file or is not valid just ignore it    
 except: 
     pass
 
@@ -74,7 +74,7 @@ except:
 # Check if a value is provided in config file
 try:
     redshell_reports_conf = os.path.expanduser(ConfigSectionMap("Paths")['reports'])
-    # if the path does not exist, create it and use it
+    # If the path does not exist, create it and use it
     if not os.path.isdir(redshell_reports_conf):
         try:
             os.makedirs(redshell_reports_conf)
@@ -84,7 +84,7 @@ try:
             REDSHELL_REPORTS = redshell_reports_conf    
     else:
         REDSHELL_REPORTS = redshell_reports_conf
-# if no entry exists in config file or is not valid just ignore it    
+# If no entry exists in config file or is not valid just ignore it    
 except: 
     pass
 

@@ -44,7 +44,7 @@ def execute(cmd_tokens):
         with open(REDSHELL_HISTORY, 'a') as history_file:
             history_file.write(' '.join(cmd_tokens) + os.linesep)
 
-        # show list of available command and their short usage
+        # Show list of available command and their short usage
         if cmd_name == 'help' or cmd_name == 'usage':
             for cmd_name in built_in_cmds:
                 try:
