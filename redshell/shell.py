@@ -123,6 +123,7 @@ def init():
     register_command("history", history)
     register_command("burp", burp)
     register_command("nmap", nmap)
+    register_command("owasp", owasp)
 
 
 def main():
