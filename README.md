@@ -11,7 +11,7 @@ The main focus is for web (and mobile) pentests.
 
 * use docker for external tools 
 * autoupdate git projects for the tools
-* keep the your toolset in one place
+* keep your toolset in one place
 * make a wrapper for the tools to automatically store console output and logs ine the designated directories and using the same name convention
 
 ```
