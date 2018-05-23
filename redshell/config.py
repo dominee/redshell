@@ -8,6 +8,10 @@ from redshell.constants import *
 REDSHELL_DIR = os.path.expanduser(DEFAULT_REDSHELL_DIR)
 REDSHELL_HISTORY = os.path.expanduser(DEFAULT_REDSHELL_HISTORY)
 REDSHELL_REPORTS = os.path.expanduser(DEFAULT_REDSHELL_REPORTS)
+REDSHELL_NMAP = DEFAULT_REDSHELL_NMAP
+REDSHELL_SUDO = DEFAULT_REDSHELL_SUDO
+REDSHELL_UA = DEFAULT_REDSHELL_UA
+REDSHELL_PROXY = DEFAULT_REDSHELL_PROXY
 
 REDSHELL_DIR_SUBDIRS = ['log','output','lists','tools']
 
@@ -108,7 +112,23 @@ try:
 except: 
     pass
     
-#debug
-#print("REDSHELL_DIR: ", REDSHELL_DIR)
-#print("REDSHELL_HISTORY: ", REDSHELL_HISTORY)
-#print("REDSHELL_REPORTS: ", REDSHELL_REPORTS)
+## CONFIG: Web / proxy : web proxy
+# Check if a value is provided in config file
+try:
+    redshell_proxy_conf = ConfigSectionMap("Web")['proxy']
+    if redshell_proxy_conf:
+        REDSHELL_PROXY = redshell_proxy_conf
+# if no entry exists in config file or is not valid just ignore it    
+except: 
+    pass
+
+## CONFIG: Web / UA : web UA
+# Check if a value is provided in config file
+try:
+    redshell_ua_conf = ConfigSectionMap("Web")['user-agent']
+    if redshell_ua_conf:
+        REDSHELL_UA = redshell_ua_conf
+# if no entry exists in config file or is not valid just ignore it    
+except: 
+    pass
+

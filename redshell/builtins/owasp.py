@@ -2,20 +2,22 @@
 from redshell.config import *
 import requests
 import httplib
+import re
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from requests.exceptions import ProxyError
 
+# yes, we ignroe SSL warning on purpose ;p
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 session = requests.Session()
 session.verify = False
 
-# TODO: This should be placed in config
-proxies = {'http': 'http://127.0.0.1:8080',
-           'https': 'https://127.0.0.1:8080'}
+# set proxy to config values
+proxies = {'http': 'http://'+REDSHELL_PROXY,
+           'https': 'https://'+REDSHELL_PROXY}
 session.proxies = proxies
-user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:57.0) Gecko/20100101 Firefox/57.0"
+# Set request headers 
 headers = {"Accept-Encoding": "gzip, deflate", "Upgrade-Insecure-Requests": "1",
-           "Accept-Language": "en-US,en;q=0.5", "User-Agent": user_agent, "Connection": "close"}
+           "Accept-Language": "en-US,en;q=0.5", "User-Agent": REDSHELL_UA, "Connection": "close"}
 
 
 def owasp_help():
@@ -42,8 +44,11 @@ def owasp(args):
             return owasp_help()
         if args[0] == 'usage':
             return owasp_usage()
-        # TODO: check if it is a valid url
-        host = args[0]
+        if re.match('https?://(?:www)?(?:[\w-]{2,255}(?:\.\w{2,6}){1,2})?(?:/[\w&%?#-]{1,300})?',args[0]):
+            host = args[0]
+        else:
+            owasp_usage()
+            return SHELL_STATUS_RUN
     else:
         owasp_usage()
 
@@ -76,12 +81,12 @@ def owasp(args):
     print("[ ] URI Too Long [414] : %i"  % response.status_code)
 
     # 413 Payload Too Large
-    rawBody = "A"*1024*1024*3
+    rawBody = "A"*1024*1024*5
     response = session.post(host + "/", data=rawBody, headers=headers,verify=False)
     print("[ ] Payload Too Large [413] : %i"  % response.status_code)
 
     # 417 Expectation Failed
-    response = session.get(host + '/', headers={"Accept-Encoding": "gzip, deflate", "Upgrade-Insecure-Requests": "1", "Accept-Language": "en-US,en;q=0.5", "User-Agent": user_agent, "Connection": "close","Expect":"666-evil"}, verify=False)
+    response = session.get(host + '/', headers={"Accept-Encoding": "gzip, deflate", "Upgrade-Insecure-Requests": "1", "Accept-Language": "en-US,en;q=0.5", "User-Agent": REDSHELL_UA, "Connection": "close","Expect":"666-evil"}, verify=False)
     print("[ ] Expectation Failed [417] : %i"  % response.status_code)
 
 
@@ -100,7 +105,7 @@ def owasp(args):
     httplib.HTTPConnection._http_vsn_str = vsn_str
 
     # 101 Switching Protocols
-    response = session.get(host + '/', headers={"Accept-Encoding": "gzip, deflate", "Upgrade-Insecure-Requests": "1","Accept-Language": "en-US,en;q=0.5", "User-Agent": user_agent, "Connection": "Upgrade", "Upgrade":"websocket"}, verify=False)
+    response = session.get(host + '/', headers={"Accept-Encoding": "gzip, deflate", "Upgrade-Insecure-Requests": "1","Accept-Language": "en-US,en;q=0.5", "User-Agent": REDSHELL_UA, "Connection": "Upgrade", "Upgrade":"websocket"}, verify=False)
     print("[ ] 101 Switching Protocols (websocket) [101] : %i"  % response.status_code)
 
     return SHELL_STATUS_RUN
