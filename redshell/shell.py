@@ -124,6 +124,7 @@ def init():
     register_command("burp", burp)
     register_command("nmap", nmap)
     register_command("owasp", owasp)
+    register_command("project", project)
 
 
 def main():

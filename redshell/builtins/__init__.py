@@ -6,3 +6,4 @@ from redshell.builtins.history import history
 from redshell.builtins.burp import burp
 from redshell.builtins.nmap import nmap
 from redshell.builtins.owasp import owasp
+from redshell.builtins.project import project
