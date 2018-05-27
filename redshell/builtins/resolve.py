@@ -4,6 +4,10 @@ import sys
 import dns.resolver,dns.zone
 from redshell.config import *
 
+# TODO: IPv6 support
+# TODO: change socket to dns.resolver
+# TODO: use custom resolver
+
 def resolve_help():
     sys.stdout.write("""
 [resolve]
@@ -33,7 +37,6 @@ def resolve(args):
         resolve_usage()
 
     # Check for A and CNAME
-    # TODO: Check AAAA
     sys.stdout.write("[+] Resolving "+h+" \n")
     host,aliases,ips = socket.gethostbyname_ex(h)
     if host and host != h: sys.stdout.write("[ ] %s is an alias for %s\n" % (h,host))
@@ -46,9 +49,9 @@ def resolve(args):
         for ip in ips: 
             try:
                 hostname, aliaslist, ipaddrlist = socket.gethostbyaddr(ip)
-                sys.stdout.write("[ ] IP: "+ip+" \t-> "+hostname+"\n")
+                sys.stdout.write("[*] IP: "+ip+" \t-> "+hostname+"\n")
             except:
-                sys.stdout.write("[ ] IP: "+ip+"\n")
+                sys.stdout.write("[*] IP: "+ip+"\n")
 
     # Get MX records, resolve to IP and PTR
     try:
@@ -95,7 +98,6 @@ def resolve(args):
     except:
         pass
  
-    sys.stdout.write("\n")
     return SHELL_STATUS_RUN
 
 
