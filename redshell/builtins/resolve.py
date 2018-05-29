@@ -7,6 +7,7 @@ from redshell.config import *
 # TODO: IPv6 support
 # TODO: change socket to dns.resolver
 # TODO: use custom resolver
+# TODO: version.bind chaos
 
 def resolve_help():
     sys.stdout.write("""
