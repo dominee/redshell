@@ -38,23 +38,25 @@ def resolve(args):
     sys.stdout.write("[+] Resolving "+h+" \n")
     for ip in dns.resolver.query(h, 'A'):
         try:
-            hostname = dns.reversename.from_address(str(ip))
-            sys.stdout.write("[*] IP: "+str(ip)+" \t-> "+hostname+"\n")
+            hostname = dns.resolver.query(dns.reversename.from_address(str(ip)), 'PTR')[0]
+            sys.stdout.write("[*] IP: "+str(ip)+" \t-> "+str(hostname)+"\n")
         except:
             sys.stdout.write("[*] IP: "+str(ip)+"\n")
+
 
     # Get MX records, resolve to IP and PTR
     try:
         for mx in dns.resolver.query(h, 'MX'):
             try:
-                ip = dns.reversename.to_address(str(mx))
-                hostname = dns.reversename.from_address(ip)
-                sys.stdout.write("[ ] MX: "+str(mx)+" \t-> "+ip+" \t-> "+hostname+"\n")
+                mx_host = str(mx).split(' ')[1]
+                ip = dns.resolver.query(mx_host, 'A')[0]
+                hostname = dns.resolver.query(dns.reversename.from_address(str(ip)),'PTR')[0]
+                sys.stdout.write("[ ] MX: "+str(mx)+" \t-> "+str(ip)+" \t-> "+str(hostname)+"\n")
             except:
-                sys.stdout.write("[ ] MX: "+str(mx)+" \t-> "+ip+"\n")
+                sys.stdout.write("[ ] MX: "+str(mx)+" \t-> "+str(ip)+"\n")
     except:
         pass
-
+    
     # Get NS records, resolve to IP and PTR
     try:
         for ns in dns.resolver.query(h, 'NS'):
@@ -72,11 +74,11 @@ def resolve(args):
                 pass
             # If AXFR is not possible, just resolve NS records
             try:
-                ip = dns.reversename.to_address(str(ns))
-                hostname = dns.reversename.from_address(ip)
-                sys.stdout.write("[ ] NS: "+str(ns)+" \t-> "+ip+" \t-> "+hostname+"\n")
+                ip = dns.resolver.query(str(ns), 'A')[0]
+                hostname = dns.resolver.query(dns.reversename.from_address(str(ip)), 'PTR')[0]
+                sys.stdout.write("[ ] NS: "+str(ns)+" \t-> "+str(ip)+" \t-> "+str(hostname)+"\n")
             except:
-                sys.stdout.write("[ ] NS: "+str(ns)+" \t-> "+ip+"\n")
+                sys.stdout.write("[ ] NS: "+str(ns)+" \t-> "+str(ip)+"\n")
                     
     except:
         pass
