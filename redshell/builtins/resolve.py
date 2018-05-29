@@ -1,10 +1,9 @@
 #! /usr/bin/env python
 import socket
 import sys
-import dns.resolver,dns.zone
+import dns.resolver,dns.zone,dns.reversename
 from redshell.config import *
 
-# TODO: IPv6 support
 # TODO: change socket to dns.resolver
 # TODO: use custom resolver
 # TODO: version.bind chaos
@@ -92,6 +91,13 @@ def resolve(args):
     except:
         pass
 
+    # Check for AAAA records
+    try:    
+        for aaaa in dns.resolver.query(h, 'AAAA'):
+            sys.stdout.write("[ ] AAAA: "+str(aaaa)+"\n")        
+    except:
+        pass
+ 
     # Check for TXT  records
     try:    
         for txt in dns.resolver.query(h, 'TXT'):
