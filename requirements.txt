@@ -1,0 +1,4 @@
+dnspython==1.15.0
+configparser==3.5.0
+termcolor==1.1.0
+requests==2.11.1
