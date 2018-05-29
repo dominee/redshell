@@ -2,8 +2,8 @@
 import sys
 import dns.resolver,dns.zone,dns.reversename
 from redshell.config import *
+from termcolor import colored
 
-# TODO: use custom resolver
 # TODO: version.bind chaos
 
 def resolve_help():
@@ -11,15 +11,16 @@ def resolve_help():
 [resolve]
 Usage : resolve <domain> [nameserver]
 
-Resolve a domain name recursively
+Resolve a domain name recursively.
 
 Examples: 
 resolve github.com
+resolve github.com 8.8.8.8
 """)
     return SHELL_STATUS_RUN
 
 def resolve_usage():
-    sys.stdout.write("resolve <domain> [nameserver]\n")
+    sys.stdout.write(colored("resolve","white")+" <domain> [nameserver]\n")
     return SHELL_STATUS_RUN
 
 def resolve(args):
@@ -51,13 +52,13 @@ def resolve(args):
         resolve_usage()
 
     # Check for A and CNAME
-    sys.stdout.write("[+] Resolving "+h+" \n")
+    sys.stdout.write("[+] Resolving "+colored(h,'white')+" \n")
     for ip in my_resolver.query(h, 'A'):
         try:
             hostname = my_resolver.query(dns.reversename.from_address(str(ip)), 'PTR')[0]
-            sys.stdout.write("[*] IP: "+str(ip)+" -> "+str(hostname)+"\n")
+            sys.stdout.write("[*] IP: "+colored(str(ip),'white')+" -> "+str(hostname)+"\n")
         except:
-            sys.stdout.write("[*] IP: "+str(ip)+"\n")
+            sys.stdout.write("[*] IP: "+colored(str(ip),'white')+"\n")
 
 
     # Get MX records, resolve to IP and PTR
@@ -79,7 +80,7 @@ def resolve(args):
             try:
                 # Try to make a AXFR zone transfer
                 z = dns.zone.from_xfr(dns.query.xfr(ns, h))
-                sys.stdout.write("[!] AXFR:\n")
+                sys.stdout.write(colored("[!] AXFR:\n",'red'))
                 names = z.nodes.keys()
                 names.sort()
                 # If AXFR is possible, print the result
