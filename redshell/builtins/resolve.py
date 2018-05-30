@@ -51,7 +51,7 @@ def resolve(args):
     else:
         resolve_usage()
 
-    # Check for A and CNAME
+    # Check for A
     sys.stdout.write("[+] Resolving "+colored(h,'white')+" \n")
     for ip in my_resolver.query(h, 'A'):
         try:
@@ -59,6 +59,13 @@ def resolve(args):
             sys.stdout.write("[*] IP: "+colored(str(ip),'white')+" -> "+str(hostname)+"\n")
         except:
             sys.stdout.write("[*] IP: "+colored(str(ip),'white')+"\n")
+
+    # Check for CNAME
+    try:
+        cname = my_resolver.query(h, 'CNAME')[0]
+        sys.stdout.write("[*] "+h+" is an alias for "+colored(str(cname),'white')+"\n")
+    except:
+        pass
 
 
     # Get MX records, resolve to IP and PTR
