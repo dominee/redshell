@@ -117,7 +117,7 @@ def resolve(args):
                 sys.stdout.write("[ ] NS: "+str(ns)+" -> "+str(ip))
 
             try:
-                chaos = timeout_command(["/usr/bin/dig", '@'+str(ns), "version.bind", "txt", "chaos", "+short"], 1)
+                chaos = timeout_command([REDSHELL_DIG, '@'+str(ns), "version.bind", "txt", "chaos", "+short"], 1)
                 if chaos:
                     sys.stdout.write(" \t["+str(chaos).rstrip()+"]")
             except:

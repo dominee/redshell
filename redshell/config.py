@@ -111,6 +111,17 @@ try:
 # if no entry exists in config file or is not valid just ignore it    
 except: 
     pass
+
+## CONFIG: Bin / dig : binary for dig
+# Check if a value is provided in config file
+try:
+    redshell_dig_conf = os.path.expanduser(ConfigSectionMap("Bin")['dig'])
+    if os.path.isfile(redshell_dig_conf) and os.access(redshell_dig_conf, os.X_OK):
+        REDSHELL_DIG = redshell_dig_conf
+# if no entry exists in config file or is not valid just ignore it    
+except: 
+    pass
+    
     
 ## CONFIG: Web / proxy : web proxy
 # Check if a value is provided in config file
