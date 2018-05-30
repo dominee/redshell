@@ -1,10 +1,10 @@
 #! /usr/bin/env python
 import sys
 import dns.resolver,dns.zone,dns.reversename
+import subprocess, datetime, os, time, signal
 from redshell.config import *
 from termcolor import colored
 
-# TODO: version.bind chaos
 
 def resolve_help():
     sys.stdout.write("""
@@ -22,6 +22,18 @@ resolve github.com 8.8.8.8
 def resolve_usage():
     sys.stdout.write(colored("resolve","white")+" <domain> [nameserver]\n")
     return SHELL_STATUS_RUN
+
+# Used from https://github.com/EMOziko/DNS-Server-Checker/blob/master/dnschecker.py
+def timeout_command(command, timeout):
+    start = datetime.datetime.now()
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    while process.poll() is None:
+      time.sleep(0.1)
+      now = datetime.datetime.now()
+      if (now - start).seconds> timeout:
+        os.kill(process.pid, signal.SIGKILL)
+        return None
+    return process.stdout.read()
 
 def resolve(args):
 
@@ -100,10 +112,19 @@ def resolve(args):
             try:
                 ip = my_resolver.query(str(ns), 'A')[0]
                 hostname = my_resolver.query(dns.reversename.from_address(str(ip)), 'PTR')[0]
-                sys.stdout.write("[ ] NS: "+str(ns)+" -> "+str(ip)+" -> "+str(hostname)+"\n")
+                sys.stdout.write("[ ] NS: "+str(ns)+" -> "+str(ip)+" -> "+str(hostname))
             except:
-                sys.stdout.write("[ ] NS: "+str(ns)+" -> "+str(ip)+"\n")
-                    
+                sys.stdout.write("[ ] NS: "+str(ns)+" -> "+str(ip))
+
+            try:
+                chaos = timeout_command(["/usr/bin/dig", '@'+str(ns), "version.bind", "txt", "chaos", "+short"], 1)
+                if chaos:
+                    sys.stdout.write(" \t["+str(chaos).rstrip()+"]")
+            except:
+                pass
+
+            sys.stdout.write("\n")
+
     except:
         pass
 
