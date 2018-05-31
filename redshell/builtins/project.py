@@ -2,6 +2,10 @@
 import os
 from redshell.config import *
 from datetime import datetime
+from distutils import dir_util
+from termcolor import colored
+
+# TODO : return path to latest project and or cd
 
 # This is were we create a new project
 project_dir = REDSHELL_REPORTS+os.sep+datetime.now().strftime("%Y"+os.sep+"%m"+os.sep+"%d")
@@ -40,8 +44,17 @@ def project(args):
 
     # Create a directory structure for the project
     if not os.path.isdir(current_project_dir):
-        #os.makedirs(project_dir)
-        sys.stdout.write("[ ] Creating new project folder:"+current_project_dir+"\n")
+        sys.stdout.write("[*] Creating new project folder: "+colored(current_project_dir,'white')+"\n")
+        os.makedirs(project_dir)
+        sys.stdout.write("[ ] Populating with templates... ")
+        templates = dir_util.copy_tree(REDSHELL_TEMPLATES,current_project_dir,dry_run=0)
+        sys.stdout.write("( "+str(len(templates))+" files )\n")
+
+        # TODO: create symlinks to wordlists (for burp)?
+        # TODO: touch file placeholders for burpproject etc, to have a consistent naming policy
+
+    else:
+        sys.stdout.write("[!] Such project already exists : "+colored(current_project_dir,'white')+"\n")
 
     return SHELL_STATUS_RUN
 
