@@ -2,6 +2,7 @@
 import ConfigParser
 import os
 import sys
+from distutils import dir_util
 from redshell.constants import *
 
 # Set default values
@@ -63,6 +64,15 @@ try:
 # If no entry exists in config file or is not valid just ignore it    
 except: 
     pass
+
+try:
+    # Set up the directory for templates
+    REDSHELL_TEMPLATES = REDSHELL_DIR+os.sep+'templates'
+    # If it it is not present in the homedir, copy it there
+    if not os.path.isdir(REDSHELL_TEMPLATES):
+        dir_util.copy_tree('templates',REDSHELL_TEMPLATES)
+except:
+    pass    
 
 ## CONFIG: Paths / history : Redshell history file
 # Check if a value is provided in config file

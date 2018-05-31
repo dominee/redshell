@@ -125,6 +125,7 @@ def init():
     register_command("nmap", nmap)
     register_command("owasp", owasp)
     register_command("resolve", resolve)
+    register_command("project", project)
 
 
 def main():

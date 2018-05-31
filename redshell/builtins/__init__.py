@@ -7,3 +7,4 @@ from redshell.builtins.burp import burp
 from redshell.builtins.nmap import nmap
 from redshell.builtins.owasp import owasp
 from redshell.builtins.resolve import resolve
+from redshell.builtins.project import project
