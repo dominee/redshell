@@ -24,7 +24,7 @@ project myNewProject
     return SHELL_STATUS_RUN
 
 def project_usage():
-    sys.stdout.write("project project-name\n")
+    sys.stdout.write(colored("project","white")+" project-name\n")
     return SHELL_STATUS_RUN
 
 def project(args):
@@ -44,9 +44,9 @@ def project(args):
 
     # Create a directory structure for the project
     if not os.path.isdir(current_project_dir):
-        sys.stdout.write("[*] Creating new project folder: "+colored(current_project_dir,'white')+"\n")
+        sys.stdout.write(STAR+"Creating new project folder: "+colored(current_project_dir,'white')+"\n")
         os.makedirs(project_dir)
-        sys.stdout.write("[ ] Populating with templates... ")
+        sys.stdout.write(LS+"Populating with templates... ")
         templates = dir_util.copy_tree(REDSHELL_TEMPLATES,current_project_dir,dry_run=0)
         sys.stdout.write("( "+str(len(templates))+" files )\n")
 
@@ -54,7 +54,7 @@ def project(args):
         # TODO: touch file placeholders for burpproject etc, to have a consistent naming policy
 
     else:
-        sys.stdout.write("[!] Such project already exists : "+colored(current_project_dir,'white')+"\n")
+        sys.stdout.write(EX+"Such project already exists : "+colored(current_project_dir,'white')+"\n")
 
     return SHELL_STATUS_RUN
 

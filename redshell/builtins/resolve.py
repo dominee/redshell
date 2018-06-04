@@ -5,7 +5,6 @@ import subprocess, datetime, os, time, signal
 from redshell.config import *
 from termcolor import colored
 
-
 def resolve_help():
     sys.stdout.write("""
 [resolve]

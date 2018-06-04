@@ -3,6 +3,7 @@ import os
 from redshell.config import *
 from subprocess import Popen, STDOUT
 from datetime import datetime
+from termcolor import colored
 
 nmap_dir = REDSHELL_DIR+os.sep+'tools'+os.sep+'nmap'
 nmap_log = REDSHELL_DIR+os.sep+'log'+os.sep+datetime.now().strftime("%Y"+os.sep+"%m"+os.sep+"%d")
@@ -26,7 +27,7 @@ nmap sudo -sS -p 22 localhost
     return SHELL_STATUS_RUN
 
 def nmap_usage():
-    sys.stdout.write("nmap [sudo] <nmap arguments> <host>\n")
+    sys.stdout.write(colored("nmap","white")+" [sudo] <nmap arguments> <host>\n")
     return SHELL_STATUS_RUN
 
 def nmap(args):
@@ -53,14 +54,14 @@ def nmap(args):
     try:
         if not sudo:
             p = Popen([REDSHELL_NMAP, '-oA', nmap_log_file]+args, bufsize=1)
-            sys.stdout.write("[+] Nmap starting [%s]\n" % p.pid)
+            sys.stdout.write(PLUS+"Nmap starting [%s]\n" % p.pid)
         else:
             # For now we asume that nmap is in sudeoers passwordless ;p
             # user ALL = (root) NOPASSWD: /usr/local/bin/nmap
             # TODO: use pexpect
             p = Popen([REDSHELL_SUDO, REDSHELL_NMAP, '-oA', nmap_log_file+' ']+args, bufsize=1, shell=False)
-            sys.stdout.write("[+] (sudo) Nmap starting [%s]\n" % p.pid)
+            sys.stdout.write(PLUS+"(sudo) Nmap starting [%s]\n" % p.pid)
     except:
-        sys.stdout.write("[!] Error: "+sys.exc_info()[0])
+        sys.stdout.write(EX+"Error: "+sys.exc_info()[0])
     return SHELL_STATUS_RUN
 

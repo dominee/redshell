@@ -1,10 +1,11 @@
 import os
 import sys
 from redshell.constants import *
-
+from termcolor import colored
+from redshell.config import REDSHELL_HISTORY
 
 def history(args):
-    with open(HISTORY_PATH, 'r') as history_file:
+    with open(REDSHELL_HISTORY, 'r') as history_file:
         lines = history_file.readlines()
 
         # default limit is whole file
@@ -18,7 +19,7 @@ def history(args):
 
         for line_num, line in enumerate(lines):
             if line_num >= start:
-                sys.stdout.write('%d %s' % (line_num + 1, line))
+                sys.stdout.write('%d: %s' % (line_num + 1, line))
         sys.stdout.flush()
 
     return SHELL_STATUS_RUN

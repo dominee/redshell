@@ -4,6 +4,7 @@ import os,time,glob
 from redshell.config import *
 from subprocess import Popen, PIPE, STDOUT
 from datetime import datetime
+from termcolor import colored
 
 burp_dir = REDSHELL_DIR+os.sep+'tools'+os.sep+'burp'
 burp_log = REDSHELL_DIR+os.sep+'log'+os.sep+datetime.now().strftime(os.sep+"%Y"+os.sep+"%m"+os.sep+"%d")
@@ -19,7 +20,7 @@ Wrapper for burp to add auto-logging of console output. It starts the newst jar 
     return SHELL_STATUS_RUN
 
 def burp_usage():
-    sys.stdout.write("burp\n")
+    sys.stdout.write(colored("burp","white")+"\n")
     return SHELL_STATUS_RUN
 
 def burp(args):
@@ -55,15 +56,15 @@ def burp(args):
     # Get the newest one
     ct,fp = sorted(entries,reverse=True)[0]
 
-    print '[ ] Using latest Burpsuite',fp,'(',time.ctime(ct),')'
+    print STAR+'Using latest Burpsuite',colored(fp,'white'),'(',time.ctime(ct),')'
 
     # Open a new logfile with timestamp suffix and run burp
     logfile = open(burp_log+os.sep+"burp-console-"+datetime.now().strftime("%H%M%S")+".log", 'ab')
     try:
         p = Popen(['java', '-jar', '-Xmx4g', '-XX:MaxPermSize=2G', fp], stdout=logfile, stderr=STDOUT, cwd=burp_dir, bufsize=1)
-        sys.stdout.write("[+] Burpsuite starting [%s]\n" % p.pid)
+        sys.stdout.write(PLUS+"Burpsuite starting [%s]\n" % colored(p.pid,'white'))
     except:
-        sys.stdout.write("[!] Error: "+sys.exc_info()[0])
+        sys.stdout.write(EX+" Error: "+sys.exc_info()[0])
 
     # Return to the directory we started from
     os.chdir(start_dir)
