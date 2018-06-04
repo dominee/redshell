@@ -126,6 +126,7 @@ def init():
     register_command("owasp", owasp)
     register_command("resolve", resolve)
     register_command("project", project)
+    register_command("ipenc", ipenc)
 
 
 def main():
