@@ -9,3 +9,4 @@ from redshell.builtins.owasp import owasp
 from redshell.builtins.resolve import resolve
 from redshell.builtins.project import project
 from redshell.builtins.ipenc import ipenc
+from redshell.builtins.urlfuzz import urlfuzz

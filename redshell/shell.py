@@ -127,6 +127,7 @@ def init():
     register_command("resolve", resolve)
     register_command("project", project)
     register_command("ipenc", ipenc)
+    register_command("urlfuzz", urlfuzz)
 
 
 def main():
