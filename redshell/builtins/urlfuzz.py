@@ -4,11 +4,12 @@ import itertools
 import re
 from redshell.config import *
 from termcolor import colored
+from redshell.constants import DEFAULT_HOST
 
-
-host_1 = colored("h1."+"p.batata.sk","red") # TODO: config
-host_2 = colored("h2."+"p.batata.sk","yellow") # TODO: config
-host_3 = colored("h3."+"p.batata.sk","white") # TODO: config
+# Generate hostnames to populate fuzz_list
+host_1 = colored("h1."+REDSHELL_COLLABORATOR,"red")
+host_2 = colored("h2."+REDSHELL_COLLABORATOR,"yellow")
+host_3 = colored("h3."+REDSHELL_COLLABORATOR,"white")
 
 # Ports and schemes to apply
 schemes = ["http", "https"]
@@ -67,12 +68,11 @@ def urlfuzz(args):
             return SHELL_STATUS_RUN
     else:
         # Use 'localhost' as default vale
-        host = colored("localhost",'green')
+        host = colored(DEFAULT_HOST,'green')
         sys.stdout.write(STAR+"Host not specified. Using default: "+host+"\n")
 
     # Generate host combinations
     fuzzed = set()
-    #for i in itertools.product(schemes, hostlist, hostlist, hostlist, ports, ports):
     for i in itertools.product(schemes, [host,host_1], [host,host_2], [host,host_3], ports, ports):
         if i[1] == i[2] or i[4] == i[5]:
             continue

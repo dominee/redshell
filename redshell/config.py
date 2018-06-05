@@ -13,7 +13,7 @@ REDSHELL_NMAP = DEFAULT_REDSHELL_NMAP
 REDSHELL_SUDO = DEFAULT_REDSHELL_SUDO
 REDSHELL_UA = DEFAULT_REDSHELL_UA
 REDSHELL_PROXY = DEFAULT_REDSHELL_PROXY
-
+REDSHELL_COLLABORATOR = DEFAULT_REDSHELL_COLLABORATOR
 REDSHELL_DIR_SUBDIRS = ['log','output','lists','tools']
 
 def ConfigSectionMap(section):
@@ -153,3 +153,12 @@ try:
 except: 
     pass
 
+## CONFIG: Web / collaborator-host : your collaborator host (we use batata)
+# Check if a value is provided in config file
+try:
+    collaborator_host = ConfigSectionMap("Web")['collaborator-host']
+    if collaborator_host:
+        REDSHELL_COLLABORATOR = collaborator_host
+# if no entry exists in config file or is not valid just ignore it    
+except: 
+    pass
