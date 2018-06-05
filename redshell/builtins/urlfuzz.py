@@ -5,16 +5,15 @@ import re
 from redshell.config import *
 from termcolor import colored
 
-allowed = ["localhost"]
+
+host_1 = colored("h1."+"p.batata.sk","red") # TODO: config
+host_2 = colored("h2."+"p.batata.sk","yellow") # TODO: config
+host_3 = colored("h3."+"p.batata.sk","white") # TODO: config
+
+# Ports and schemes to apply
 schemes = ["http", "https"]
-first = "first.p.batata.sk"
-second = "second.p.batata.sk"
-third = "third.p.batata.sk"
-
-hostlist = [colored(first,'green'), colored(second,'red'), colored(third,'yellow')] + allowed
 ports = ["80", "443"]
-
-
+# List of parser bypasses from Orange
 fuzz_list = [
     "{scheme}://{h1} &@{h2}# @{h3}/",
     "{scheme}://{h1}:{port1}:{port2}/",
@@ -35,19 +34,19 @@ ValidHostnameRegex = r"^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*(
 def urlfuzz_help():
     sys.stdout.write("""
 [urlfuzz]
-Usage : urlfuzz <ip>
+Usage : urlfuzz [whitelisted-host]
 
-Generate URLs for fuzzing url-parsers.
+Generate URLs for fuzzing url-parsers. Without parameter 'localhost' is used.
 
 Examples: 
-urlfuzz 
+urlfuzz
+urlfuzz example.com
 """)
     return SHELL_STATUS_RUN
 
 def urlfuzz_usage():
-    sys.stdout.write(colored("urlfuzz","white")+" <url1>\n")
+    sys.stdout.write(colored("urlfuzz","white")+" [host]\n")
     return SHELL_STATUS_RUN
-
 
 
 def urlfuzz(args):
@@ -61,22 +60,27 @@ def urlfuzz(args):
 
         # Check for host params
         if re.match(ValidHostnameRegex,args[0]) or re.match(ValidIpAddressRegex,args[0]):
-            host=args[0]
+            host=colored(args[0],'green')
+        # In case the first argument is an invalid host or IP, exit
         else:
             urlfuzz_usage()
             return SHELL_STATUS_RUN
     else:
-        urlfuzz_usage()
-        return SHELL_STATUS_RUN
+        # Use 'localhost' as default vale
+        host = colored("localhost",'green')
+        sys.stdout.write(STAR+"Host not specified. Using default: "+host+"\n")
 
+    # Generate host combinations
     fuzzed = set()
-    for i in itertools.product(schemes, hostlist, hostlist, hostlist, ports, ports):
+    #for i in itertools.product(schemes, hostlist, hostlist, hostlist, ports, ports):
+    for i in itertools.product(schemes, [host,host_1], [host,host_2], [host,host_3], ports, ports):
         if i[1] == i[2] or i[4] == i[5]:
             continue
         for u in fuzz_list:
             fuzzed.add(u.format(scheme=i[0], h1=i[1], h2=i[2], h3=i[3], port1=i[4], port2=i[5]))
 
     for f in fuzzed:
-        print(f)
+        if host in f:
+            sys.stdout.write(f+"\n")
     
     return SHELL_STATUS_RUN
