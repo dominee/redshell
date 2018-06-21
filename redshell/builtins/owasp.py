@@ -19,7 +19,9 @@ session.proxies = proxies
 # Set request headers 
 headers = {"Accept-Encoding": "gzip, deflate", "Upgrade-Insecure-Requests": "1",
            "Accept-Language": "en-US,en;q=0.5", "User-Agent": REDSHELL_UA, "Connection": "close"}
-
+#clear headers for the beginning
+session.headers.clear()
+session.headers.update(headers)
 
 def owasp_help():
     sys.stdout.write("""
@@ -109,5 +111,133 @@ def owasp(args):
     response = session.get(host + '/', headers={"Accept-Encoding": "gzip, deflate", "Upgrade-Insecure-Requests": "1","Accept-Language": "en-US,en;q=0.5", "User-Agent": REDSHELL_UA, "Connection": "Upgrade", "Upgrade":"websocket"}, verify=False)
     print(LS+"101 Switching Protocols (websocket) [101] : %s"  % colored(response.status_code,'white'))
 
+
+    # Headers proxy/waf related
+    session.headers.clear()
+    headers_waf=headers.copy()
+    headers_waf_dict={
+        "Access-Control-Request-Method": "GET",
+        "X-HTTP-Method-Override": "GET",
+        "Proxy-Authorization": "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==",
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache",
+        "Forwarded": "for=192.0.2.60;proto=http;by=127.0.0.1",
+        "From": "hacker@example.com",
+        "Max-Forwards": "1",
+        "Referer": "https://127.0.0.1",
+        "Via": "1.0 127.0.0.1, 1.1 localhost",
+        "X-Forwarded-For": "\"127.0.0.1\", \"192.168.1.1\"",
+        "X-Forwarded-Host": "localhost:8080",
+        "X-Forwarded-Proto": "https",
+        "Proxy-Connection": "keep-alive",
+    }
+
+    # Concat the dictionaries
+    headers_waf.update(headers_waf_dict)
+    response = session.post(host + '/', headers=headers_waf, verify=False)
+    print(LS+"Using HTTP headers (proxy/WAF): %s"  % colored(response.status_code,'white'))
+
+
+
+# Headers Subset with reasonable headers
+    session.headers.clear()
+    headers_subset=headers.copy()
+    headers_subset_dict={
+        "A-IM": "feed",
+        "Accept": "text/plain",
+        "Accept-Charset": "utf-8",
+        "Accept-Datetime": "Thu, 31 May 2007 20:35:00 GMT",
+        "Access-Control-Request-Method": "GET",
+        "Authorization": "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==",
+        "Proxy-Authorization": "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==",
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache",
+        "Content-MD5": "Q2hlY2sgSW50ZWdyaXR5IQ==",
+        "Cookie": "$Version=1; Debug=true;",
+        "Date": "Tue, 15 Nov 1994 08:12:31 GMT",
+        "Expect": "100-continue",
+        "Forwarded": "for=192.0.2.60;proto=http;by=127.0.0.1",
+        "From": "user@example.com",
+        "If-Modified-Since": "Sat, 29 Oct 1994 19:43:31 GMT",
+        "Max-Forwards": "5",
+        "Origin": "https://kali.citadelo.com",
+        "Referer": "https://127.0.0.1",
+        "TE": "trailers, deflate",
+        "Via": "1.0 127.0.0.1, 1.1 localhost",
+        "Warning": "199 Miscellaneous warning",
+        "X-Requested-With": "XMLHttpRequest",
+        "DNT": "1",
+        "X-Forwarded-For": "\"127.0.0.1\", \"192.168.1.1\"",
+        "X-Forwarded-Host": "localhost:8080",
+        "X-Forwarded-Proto": "https",
+        "Front-End-Https": "on",
+        "X-HTTP-Method-Override": "GET",
+        "X-Att-Deviceid": "GT-P7320/P7320XXLPG",
+        "x-wap-profile": "http://wap.samsungmobile.com/uaprof/SGH-I777.xml",
+        "Proxy-Connection": "keep-alive",
+        "X-UIDH": "supercookie",
+        "X-Csrf-Token": "i8XNjC4b8KVok4uw5RftR38Wgp2BFwql",
+        "X-Request-ID": "f058ebd6-02f7-4d3f-942e-904344e8cde5"
+    }
+
+    # Concat the dictionaries
+    headers_subset.update(headers_subset_dict)
+    response = session.post(host + '/', headers=headers_subset, verify=False)
+    print(LS+"Using HTTP headers (subset): %s"  % colored(response.status_code,'white'))
+
+
+    # ALL Headers
+    session.headers.clear()
+    headers_all=headers.copy()
+    # List from https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
+    headers_big={
+        "A-IM": "feed",
+        "Accept": "text/plain",
+        "Accept-Charset": "utf-8",
+        "Accept-Datetime": "Thu, 31 May 2007 20:35:00 GMT",
+        "Access-Control-Request-Method": "GET",
+        "Authorization": "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==",
+        "Proxy-Authorization": "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==",
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache",
+        "Content-MD5": "Q2hlY2sgSW50ZWdyaXR5IQ==",
+        "Cookie": "$Version=1; Debug=true;",
+        "Date": "Tue, 15 Nov 1994 08:12:31 GMT",
+        "Expect": "100-continue",
+        "Forwarded": "for=192.0.2.60;proto=http;by=127.0.0.1",
+        "From": "user@example.com",
+        "If-Modified-Since": "Sat, 29 Oct 1994 19:43:31 GMT",
+        "If-Unmodified-Since": "Sat, 29 Oct 1994 19:43:31 GMT",
+        "If-Match": "\"737060cd8c284d8af7ad3082f209582d\"",
+        "If-None-Match": "\"737060cd8c284d8af7ad3082f209582d\"",
+        "If-Range": "\"737060cd8c284d8af7ad3082f209582d\"",
+        "Max-Forwards": "5",
+        "Origin": "https://kali.citadelo.com",
+        "Referer": "https://127.0.0.1",
+        "TE": "trailers, deflate",
+        "Via": "1.0 127.0.0.1, 1.1 localhost",
+        "Warning": "199 Miscellaneous warning",
+        "X-Requested-With": "XMLHttpRequest",
+        "DNT": "1",
+        "X-Forwarded-For": "\"127.0.0.1\", \"192.168.1.1\"",
+        "X-Forwarded-Host": "localhost:8080",
+        "X-Forwarded-Proto": "https",
+        "Front-End-Https": "on",
+        "X-HTTP-Method-Override": "GET",
+        "X-Att-Deviceid": "GT-P7320/P7320XXLPG",
+        "x-wap-profile": "http://wap.samsungmobile.com/uaprof/SGH-I777.xml",
+        "Proxy-Connection": "keep-alive",
+        "X-UIDH": "supercookie",
+        "X-Csrf-Token": "i8XNjC4b8KVok4uw5RftR38Wgp2BFwql",
+        "X-Request-ID": "f058ebd6-02f7-4d3f-942e-904344e8cde5"
+    }
+
+    # Concat the dictionaries
+    headers_all.update(headers_big)
+    response = session.post(host + '/', headers=headers_all, verify=False)
+    print(LS+"Using ALL HTTP headers : %s"  % colored(response.status_code,'white'))
+
+    # The End
+    session.close()
     return SHELL_STATUS_RUN
 
