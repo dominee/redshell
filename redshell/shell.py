@@ -128,6 +128,7 @@ def init():
     register_command("project", project)
     register_command("ipenc", ipenc)
     register_command("urlfuzz", urlfuzz)
+    register_command("template", TEMPLATE)
 
 
 def main():

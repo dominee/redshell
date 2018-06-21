@@ -10,3 +10,4 @@ from redshell.builtins.resolve import resolve
 from redshell.builtins.project import project
 from redshell.builtins.ipenc import ipenc
 from redshell.builtins.urlfuzz import urlfuzz
+from redshell.builtins.TEMPLATE import TEMPLATE
